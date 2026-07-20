@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accounts-service-deployment
+  labels:
+    app: accounts-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: accounts-service
+  template:
+    metadata:
+      labels:
+        app: accounts-service
+    spec:
+      containers:
+      - name: accounts-service
+        image: kavyashreedalawai/devops-project-local:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DATABASE_URI
+          value: "sqlite:///:memory:"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: accounts-service-routing
+spec:
+  type: NodePort
+  selector:
+    app: accounts-service
+  ports:
+  - port: 5000
+    targetPort: 5000
+    nodePort: 32000
