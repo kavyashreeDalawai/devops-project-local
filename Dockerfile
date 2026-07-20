@@ -1,17 +1,28 @@
-FROM python:3.9-slim
+# Stage 1: Build dependencies
+FROM python:3.11-alpine AS builder
 
-# Create working folder and install dependencies
 WORKDIR /app
+
+RUN apk add --no-cache gcc musl-dev postgresql-dev libffi-dev
+
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --user --no-cache-dir -r requirements.txt
 
-# Copy the application contents
-COPY service/ ./service/
+# Stage 2: Final lightweight image
+FROM python:3.11-alpine AS runner
 
-# Switch to a non-root user
-RUN useradd --uid 1000 theia && chown -R theia /app
-USER theia
+WORKDIR /app
 
-# Run the service
-EXPOSE 8080
-CMD ["gunicorn", "--bind=0.0.0.0:8080", "--log-level=info", "service:app"]
+RUN apk add --no-cache libpq
+
+# Copy installed dependencies from builder stage
+COPY --from=builder /root/.local /root/.local
+COPY . .
+
+ENV PATH=/root/.local/bin:$PATH
+ENV FLASK_APP=service:create_app
+ENV FLASK_DEBUG=0
+
+EXPOSE 5000
+
+CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
