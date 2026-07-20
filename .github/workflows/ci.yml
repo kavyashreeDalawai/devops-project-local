@@ -42,7 +42,8 @@ jobs:
 
     - name: Run Code Linter Syntax Guard (Flake8)
       run: |
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --stats
+        # Removed the broken --stats argument
+        flake8 . --count --select=E9,F63,F7,F82 --show-source
         flake8 . --count --max-line-length=127 --statistics
 
     - name: Execute Automated Test Suite & Coverage Checks
