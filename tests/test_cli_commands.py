@@ -12,6 +12,7 @@ class TestCliCommands(unittest.TestCase):
 
     def test_db_create_command(self):
         runner = CliRunner()
+        # Bind the live dynamic app application context loop directly to the runner mixin
         with self.app.app_context():
-            result = runner.invoke(db_create)
+            result = runner.invoke(db_create, obj={"app": self.app})
             self.assertEqual(result.exit_code, 0)
