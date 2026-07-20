@@ -1,21 +1,10 @@
-"""
-Flask CLI Command Extensions
-"""
-from service import app
-from service.models import db
+import click
+from flask.cli import with_appcontext
+from service import db
 
-
-######################################################################
-# Command to force tables to be rebuilt
-# Usage:
-#   flask db-create
-######################################################################
-@app.cli.command("db-create")
+@click.command('db-create')
+@with_appcontext
 def db_create():
-    """
-    Recreates a local database. You probably should not use this on
-    production. ;-)
-    """
-    db.drop_all()
+    """Creates the database tables"""
     db.create_all()
-    db.session.commit()
+    print("Database tables created successfully.")
