@@ -1,7 +1,8 @@
 import unittest
 from click.testing import CliRunner
-from service import create_app, db
+from service import create_app
 from service.common.cli_commands import db_create
+
 
 class TestCliCommands(unittest.TestCase):
     def setUp(self):

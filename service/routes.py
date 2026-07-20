@@ -2,6 +2,7 @@ from flask import jsonify, request, abort
 from service import db
 from service.models import Account
 
+
 def init_routes(app):
     """Registers all REST API endpoints with the Flask application instance"""
 

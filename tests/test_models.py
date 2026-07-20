@@ -2,6 +2,7 @@ import unittest
 from service import create_app, db
 from service.models import Account, DataValidationError
 
+
 class TestAccountModel(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
@@ -24,7 +25,7 @@ class TestAccountModel(unittest.TestCase):
     def test_deserialize_missing_keys(self):
         """It should raise DataValidationError when missing required keys"""
         account = Account()
-        bad_data = {"name": "John Doe"}  # Missing 'email'
+        bad_data = {"name": "John Doe"}
         with self.assertRaises(DataValidationError):
             account.deserialize(bad_data)
 
